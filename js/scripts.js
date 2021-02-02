@@ -70,7 +70,7 @@ console.log(`Цель будет достигнута через ${Math.ceil(mis
 /*
 * Поправить budgetDay учитывая бюджет на месяц, а не месячный доход. Вывести в консоль  округлив в меньшую сторону
 */
-budgetDay = budgetMonth/30 ^ 0;
+budgetDay = Math.floor(budgetMonth/30);
 console.log(`Бюджет на день: ${budgetDay}`);
 
 /*
