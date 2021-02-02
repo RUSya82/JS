@@ -59,7 +59,8 @@ console.log('Расходы за месяц: ' + getExpensesMonth());
 let accumulatedMonth = getAccumulatedMonth();
 
 // Срок достижения цели
-console.log(`Цель будет достигнута через ${getTargetMonth()} месяцев`);
+let message = (getTargetMonth() > 0) ? (`Цель будет достигнута через ${getTargetMonth()} месяцев`) : ('Цель не будет достигнута никогда, ищите другую работу!');
+console.log(message);
 
 //budgetDay высчитываем исходя из значения месячного накопления (accumulatedMonth)
 budgetDay = Math.floor(accumulatedMonth/30);
