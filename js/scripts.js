@@ -1,22 +1,26 @@
 let money, income, addExpenses, deposit, mission, period;
 
-money = 100000;
+money = 0;
 income = 'freelance';
 addExpenses = 'Internet, Credits, Utility bills, Mortgage';
 deposit = true;
 mission = 1000000;
 period = 12;
 let budgetDay = money/30;
+let expensesCount = 4; //количество статей расходов, которые мы учитываем
+let expenses = [];
+let amount = [];
 
-showTypeOf(money);
+
 showTypeOf(income);
 showTypeOf(deposit);
+showTypeOf(money);
 
-//Спрашиваем у пользователя “Ваш месячный доход?” и результат сохраняем в переменную money
-money = 0;
-while (!money){
-    money = parseInt(prompt("Введите Ваш месячный доход"), 10);
-}
+
+// спрашиваем у пользователя месячный доход
+// вместо start() у меня функция, которая просто запрашивает число у пользователя
+// она также используется в getExpensensies()
+money = getNumberFromUser('Введите свой месячный доход', 100000);
 
 //Спросить у пользователя “Перечислите возможные расходы за
 // рассчитываемый период через запятую” сохранить в переменную addExpenses (пример: "Квартплата, проездной, кредит")
@@ -29,31 +33,19 @@ addExpenses = addExpenses.toLowerCase().split(',');
 addExpenses = addExpenses.map((item) => {
     return item.trim();
 });
+
 //Вывод возможных расходов в виде массива
 console.log(addExpenses);
-
 
 //Спросить у пользователя “Есть ли у вас депозит в банке?”
 // и сохранить данные в переменной deposit (булево значение true/false)
 deposit = confirm('Есть ли у вас депозит в банке?');
 
-/*
-Спросить у пользователя по 2 раза каждый вопрос и записать ответы в разные переменные
-“Введите обязательную статью расходов?” (например expenses1, expenses2)
-“Во сколько это обойдется?” (например amount1, amount2)
-в итоге 4 вопроса и 4 разные переменных
-*/
-let expenses1, expenses2, amount1, amount2;
-expenses1 = prompt('Введите обязательную статью расходов');
-amount1 = parseInt(prompt('Во сколько это обойдется?'));
-expenses2 = prompt('Введите обязательную статью расходов');
-amount2 = parseInt(prompt('Во сколько это обойдется?'));
+// спрашиваем обязательные статьи расходов и их величину
+getExpensensies();
 
 //Расходы за месяц
 console.log('Расходы за месяц: ' + getExpensesMonth());
-
-
-
 
 //Объявить переменную accumulatedMonth и присвоить ей результат вызова функции getAccumulatedMonth
 let accumulatedMonth = getAccumulatedMonth();
@@ -76,7 +68,7 @@ console.log(`Бюджет на день: ${budgetDay}`);
 */
 console.log(getStatusIncome(budgetDay));
 
-
+// ---------------------------------------------- functions  --------------------------------------
 /**
  * ВОзвращает статусную текстовую строку в зависимости от бюджета на день
  * @param budjet - бюджет на день
@@ -100,10 +92,11 @@ function getStatusIncome(budjet) {
  * @returns {*}
  */
 function getExpensesMonth() {
-    if(amount1 && amount2){
-        return amount1 + amount2;
+    let amountAll = 0;
+    for(let item of amount){
+        amountAll += +item;
     }
-    return 0;
+    return amountAll;
 }
 
 /**
@@ -132,4 +125,40 @@ function getTargetMonth() {
  */
 function showTypeOf(variable) {
     console.log(typeof variable);
+}
+
+/**
+ * Проверяет можно ли преобразовать переменную в число
+ * ВНИМАИЕ!!! Не меняет само число, а возвращает только bool
+ * @param number
+ * @returns {boolean|boolean}
+ */
+function isNumber(number) {
+    return !isNaN(parseFloat(number)) && isFinite(number);
+}
+
+/**
+ *
+ * @param message
+ * @param defaultValue
+ * @returns {number}
+ */
+function getNumberFromUser(message, defaultValue){
+    let moneyTemp = 0;
+    let defaultValueTemp = isNumber(defaultValue) ? defaultValue : '';
+    do{
+        moneyTemp = parseFloat(prompt(message, defaultValueTemp));
+    } while (!isNumber(moneyTemp));
+    return moneyTemp;
+}
+
+/**
+ * Запрвшивает у пользователя все расходы (наименование и величина)
+ * и записывает их в массивы
+ */
+function getExpensensies() {
+    for(let i = 0; i < expensesCount; i++){
+        expenses.push(prompt('Введите обязательную статью расходов'));
+        amount.push(getNumberFromUser('Во сколько это обойдется?'));
+    }
 }
