@@ -28,6 +28,22 @@ let appData = {
             return item.trim();
         });
         this.deposit = confirm('Есть ли у вас депозит в банке?');
+
+        for(let i = 0; i < expensesCount; i++) {
+            let temp = prompt('Введите обязательную статью расходов');
+            this.expenses[temp] = getNumberFromUser('Во сколько это обойдется?');
+        }
+
+    },
+    getBudget: function () {
+        this.budgetMonth =  this.budjet - this.expensesMonth;
+        this.budgetDay = Math.floor(this.budgetMonth/30);
+    },
+    getTargetMonth: function () {
+        if(this.budgetMonth > 0){
+            return Math.ceil(this.mission/this.budgetMonth);
+        }
+        return -1;
     },
     getExpensesMonth: function () {
         let amountAll = 0;
@@ -35,17 +51,6 @@ let appData = {
             amountAll += +this.expenses[key];
         }
         this.expensesMonth = amountAll;
-        return amountAll;
-    },
-    getBudget: function () {
-        this.budgetMonth =  this.budjet - this.getExpensesMonth();
-        this.budgetDay = this.budgetMonth/30;
-    },
-    getTargetMonth: function () {
-        if(this.budgetMonth > 0){
-            return Math.ceil(this.mission/this.budgetMonth);
-        }
-        return -1;
     },
     getStatusIncome: function () {
         if(this.budgetDay >= 1200){
@@ -58,23 +63,15 @@ let appData = {
             return 'Что то пошло не так';
         }
     },
-    getExpensensies: function () {
-        for(let i = 0; i < expensesCount; i++) {
-            let temp = prompt('Введите обязательную статью расходов');
-            this.expenses[temp] = getNumberFromUser('Во сколько это обойдется?');
-        }
-    }
 };
 
 
 appData.asking();
 
-
-// спрашиваем обязательные статьи расходов и их величину
-appData.getExpensensies();
+appData.getExpensesMonth();
 
 //Расходы за месяц
-console.log('Расходы за месяц: ' + appData.getExpensesMonth());
+console.log('Расходы за месяц: ' + appData.expensesMonth);
 
 //Объявить переменную accumulatedMonth и присвоить ей результат вызова функции getAccumulatedMonth
 appData.getBudget();
@@ -86,19 +83,11 @@ console.log(message);
 
 console.log(`Бюджет на день: ${appData.budgetDay}`);
 
-/*
-    Написать конструкцию условий (расчеты приведены в рублях)
-    Если budgetDay больше 1200, то “У вас высокий уровень дохода”
-    Если budgetDay больше 600 и меньше 1200, то сообщение “У вас средний уровень дохода”
-    Если budgetDay меньше 600 и больше 0 то в консоль вывести сообщение “К сожалению у вас уровень дохода ниже среднего”
-    Если отрицательное значение то вывести “Что то пошло не так”
-    Учесть варианты 0, 600 и 1200 (к какому уровню не важно)
-*/
-console.log(appData.getStatusIncome(appData.budgetDay));
+
 
 console.log("Наша программа включает в себя данные: ");
 for (let key in appData){
-    console.log(appData[key]);
+    console.log(`${key} : ` + appData[key]);
 }
 
 
