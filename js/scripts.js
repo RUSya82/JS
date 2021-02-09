@@ -15,6 +15,8 @@ let appData = {
     expenses: {},
     addExpenses: [],
     deposit: false,
+    percentDeposit: 0,
+    moneyDeposit: 0,
     mission: 1000000,
     period: 3,
     budjet: money,
@@ -22,6 +24,11 @@ let appData = {
     budgetMonth: 0,
     expensesMonth: 0,
     asking: function () {
+        if(confirm('Есть ли у Вас дополнительный доход?')){
+            let incomeItem = getStringFromUser('Введите источник дохода:', 'Таксую');
+            //let incomeCash = getNumberFromUser('Сколько в месяц это приносит дохода?', 10000);
+            this.income[incomeItem] = getNumberFromUser('Сколько в месяц это приносит дохода?', 10000);
+        }
         let addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую');
         addExpenses = addExpenses.toLowerCase().split(',');
         this.addExpenses = addExpenses.map((item) => {
@@ -30,7 +37,7 @@ let appData = {
         this.deposit = confirm('Есть ли у вас депозит в банке?');
 
         for(let i = 0; i < expensesCount; i++) {
-            let temp = prompt('Введите обязательную статью расходов');
+            let temp = getStringFromUser('Введите обязательную статью расходов');
             this.expenses[temp] = getNumberFromUser('Во сколько это обойдется?');
         }
 
@@ -63,12 +70,31 @@ let appData = {
             return 'Что то пошло не так';
         }
     },
+    getInfoDeposit: function () {
+        if(appData.deposit){
+            this.percentDeposit = getNumberFromUser("Какой процент депозита?", 10);
+            this.moneyDeposit = getNumberFromUser("Какой размер депозита?", 100000);
+        }
+    },
+    calcSavedMoney: function () {
+        return this.budgetMonth * this.period;
+    }
 };
 
 
 appData.asking();
 
 appData.getExpensesMonth();
+
+/*
+    Возможные расходы (addExpenses) вывести строкой в консоль каждое слово
+    с большой буквы слова разделены запятой и пробелом
+    Пример (Интернет, Такси, Коммунальные расходы)
+*/
+let addExpensesToString = appData.addExpenses.map( function (item) {
+   return item[0].toUpperCase() + item.slice(1);
+}).join(', ');
+console.log(addExpensesToString);
 
 //Расходы за месяц
 console.log('Расходы за месяц: ' + appData.expensesMonth);
@@ -89,6 +115,7 @@ console.log("Наша программа включает в себя данны
 for (let key in appData){
     console.log(`${key} : ` + appData[key]);
 }
+
 
 
 // ---------------------------------------------- functions  --------------------------------------
@@ -115,5 +142,20 @@ function getNumberFromUser(message, defaultValue){
         moneyTemp = parseFloat(prompt(message, defaultValueTemp));
     } while (!isNumber(moneyTemp));
     return moneyTemp;
+}
+
+/**
+ * Получает строку от пользователя, если пользователь ввёл не строку, то переспрашивает
+ * @param message
+ * @param defaultValue
+ * @returns {string}
+ */
+function getStringFromUser(message, defaultValue) {
+    let userString = '';
+    let defaultValueTemp = defaultValue ? String(defaultValue) : '';
+    do{
+        userString = prompt(message, defaultValueTemp).trim();
+    } while (isNumber(userString) || (userString.length === 0));
+    return userString;
 }
 
