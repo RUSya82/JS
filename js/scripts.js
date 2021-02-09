@@ -73,7 +73,7 @@ appData.getExpensesMonth();
 //Расходы за месяц
 console.log('Расходы за месяц: ' + appData.expensesMonth);
 
-//Объявить переменную accumulatedMonth и присвоить ей результат вызова функции getAccumulatedMonth
+
 appData.getBudget();
 
 // Срок достижения цели
