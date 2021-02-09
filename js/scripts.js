@@ -7,7 +7,7 @@ let expensesCount = 2; //количество статей расходов, к�
 function start(){
     money = getNumberFromUser('Введите свой месячный доход', 100000);
 }
-start();
+// start();
 
 let appData = {
     income: {},
@@ -82,39 +82,39 @@ let appData = {
 };
 
 
-appData.asking();
-
-appData.getExpensesMonth();
+// appData.asking();
+//
+// appData.getExpensesMonth();
 
 /*
     Возможные расходы (addExpenses) вывести строкой в консоль каждое слово
     с большой буквы слова разделены запятой и пробелом
     Пример (Интернет, Такси, Коммунальные расходы)
 */
-let addExpensesToString = appData.addExpenses.map( function (item) {
-   return item[0].toUpperCase() + item.slice(1);
-}).join(', ');
-console.log(addExpensesToString);
+// let addExpensesToString = appData.addExpenses.map( function (item) {
+//    return item[0].toUpperCase() + item.slice(1);
+// }).join(', ');
+// console.log(addExpensesToString);
 
 //Расходы за месяц
-console.log('Расходы за месяц: ' + appData.expensesMonth);
+// console.log('Расходы за месяц: ' + appData.expensesMonth);
 
 //Объявить переменную accumulatedMonth и присвоить ей результат вызова функции getAccumulatedMonth
-appData.getBudget();
+// appData.getBudget();
 
 // Срок достижения цели
-let message = (appData.getTargetMonth() > 0) ? (`Цель будет достигнута через ${appData.getTargetMonth()} месяцев`) : ('Цель не будет достигнута никогда, ищите другую работу!');
-console.log(message);
+// let message = (appData.getTargetMonth() > 0) ? (`Цель будет достигнута через ${appData.getTargetMonth()} месяцев`) : ('Цель не будет достигнута никогда, ищите другую работу!');
+// console.log(message);
 
 
-console.log(`Бюджет на день: ${appData.budgetDay}`);
-
-
-
-console.log("Наша программа включает в себя данные: ");
-for (let key in appData){
-    console.log(`${key} : ` + appData[key]);
-}
+// console.log(`Бюджет на день: ${appData.budgetDay}`);
+//
+//
+//
+// console.log("Наша программа включает в себя данные: ");
+// for (let key in appData){
+//     console.log(`${key} : ` + appData[key]);
+// }
 
 
 
@@ -159,3 +159,99 @@ function getStringFromUser(message, defaultValue) {
     return userString;
 }
 
+//------------------------------ Lesson09 ----------------------------------------------------------
+
+
+//--Кнопку "Рассчитать" через id
+let startBtn = document.getElementById('start');
+console.log(startBtn);
+
+
+
+//--Кнопки “+” (плюс) через Tag, каждую в своей переменной.
+//------------------------------ Так? -----------------------------------------
+let incomePlusBtn = document.querySelector('.income').querySelector('button');
+console.log(incomePlusBtn);
+
+let expensesPlusBtn = document.querySelector('.expenses').querySelector('button');
+console.log(expensesPlusBtn);
+//------------------   Или так? ---------------------------------------------
+let incomePlusBtn2 = document.getElementsByTagName('button')[0];
+console.log(incomePlusBtn2);
+
+let expensesPlusBtn2 = document.getElementsByTagName('button')[1];
+console.log(expensesPlusBtn2);
+
+
+
+//--Чекбокс по id через querySelector
+let depositCheck = document.querySelector('#deposit-check');
+console.log(depositCheck);
+
+
+
+//--Поля для ввода возможных доходов (additional_income-item) при помощи querySelectorAll
+//------------------    Так и не понял в разныx переменные их надо, или в коллекцию -----------
+let additionalIncomeItem = document.querySelectorAll('.additional_income-item');
+console.log(additionalIncomeItem);
+//------------------    Если поотдельности, то :
+let additionalIncomeItem1 = additionalIncomeItem[0];
+let additionalIncomeItem2 = additionalIncomeItem[1];
+console.log(additionalIncomeItem1);
+console.log(additionalIncomeItem2);
+
+
+/*
+* Каждый элемент в правой части программы через класс(не через querySelector),
+* которые имеют в имени класса "-value", начиная с class="budget_day-value" и заканчивая class="target_month-value">
+* */
+//-----------------------    budget_month-value я так понимаю не надо пока?
+let budgetDayValue = document.getElementsByClassName('budget_day-value')[0];
+console.log(budgetDayValue);
+
+let expensesMonthValue = document.getElementsByClassName('expenses_month-value')[0];
+console.log(expensesMonthValue);
+
+let additionalIncomeValue = document.getElementsByClassName('additional_income-value')[0];
+console.log(additionalIncomeValue);
+
+let additionalExpensesValue = document.getElementsByClassName('additional_expenses-value')[0];
+console.log(additionalExpensesValue);
+
+let incomePeriodValue = document.getElementsByClassName('income_period-value')[0];
+console.log(incomePeriodValue);
+
+let targetMonthValue = document.getElementsByClassName('target_month-value')[0];
+console.log(targetMonthValue);
+
+
+/**
+ * Оставшиеся поля через querySelector каждый в отдельную переменную:
+ * поля ввода (input) с левой стороны и не забудьте про range.
+ */
+let salaryAmount = document.querySelector('.salary-amount');
+console.log(salaryAmount);
+
+let incomeItems = document.querySelector('.income-items');
+let incomeTitle = incomeItems.querySelector('.income-title');
+console.log(incomeTitle);
+let incomeAmount = incomeItems.querySelector('.income-amount');
+console.log(incomeAmount);
+
+
+let expensesItems = document.querySelector('.expenses-items');
+let expensesTitle = expensesItems.querySelector('.expenses-title');
+console.log(expensesTitle);
+let expensesAmount = expensesItems.querySelector('.expenses-amount');
+console.log(expensesAmount);
+
+
+let additionalExpensesItem = document.querySelector('.additional_expenses-item');
+console.log(additionalExpensesItem);
+
+
+let targetAmount = document.querySelector('.target-amount');
+console.log(targetAmount);
+
+let periodSelect = document.querySelector('.period-select');
+console.log(periodSelect);
