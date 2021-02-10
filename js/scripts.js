@@ -29,7 +29,7 @@ let appData = {
             //let incomeCash = getNumberFromUser('Сколько в месяц это приносит дохода?', 10000);
             this.income[incomeItem] = getNumberFromUser('Сколько в месяц это приносит дохода?', 10000);
         }
-        let addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую');
+        let addExpenses = getStringFromUser('Перечислите возможные расходы за рассчитываемый период через запятую');
         addExpenses = addExpenses.toLowerCase().split(',');
         this.addExpenses = addExpenses.map((item) => {
             return item.trim();
@@ -154,8 +154,10 @@ function getStringFromUser(message, defaultValue) {
     let userString = '';
     let defaultValueTemp = defaultValue ? String(defaultValue) : '';
     do{
-        userString = prompt(message, defaultValueTemp).trim();
-    } while (isNumber(userString) || (userString.length === 0));
-    return userString;
+        userString = prompt(message, defaultValueTemp);
+
+    } while (isNumber(userString) || (!userString));
+    console.log(userString);
+    return userString.trim();
 }
 
