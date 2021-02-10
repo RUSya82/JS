@@ -157,7 +157,6 @@ function getStringFromUser(message, defaultValue) {
         userString = prompt(message, defaultValueTemp);
 
     } while (isNumber(userString) || (!userString));
-    console.log(userString);
     return userString.trim();
 }
 
