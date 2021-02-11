@@ -1,6 +1,4 @@
 
-let expensesCount = 2; //количество статей расходов, которые мы учитываем
-//--Кнопку "Рассчитать" через id
 let start = document.getElementById('start');
 let incomePlusBtn = document.querySelector('.income').querySelector('button');
 let expensesPlusBtn = document.querySelector('.expenses').querySelector('button');
@@ -8,6 +6,7 @@ let depositCheck = document.querySelector('#deposit-check');
 let additionalIncomeItem = document.querySelectorAll('.additional_income-item');
 let additionalIncomeItem1 = additionalIncomeItem[0];
 let additionalIncomeItem2 = additionalIncomeItem[1];
+let budgetMonthValue = document.getElementsByClassName('budget_month-value')[0];
 let budgetDayValue = document.getElementsByClassName('budget_day-value')[0];
 let expensesMonthValue = document.getElementsByClassName('expenses_month-value')[0];
 let additionalIncomeValue = document.getElementsByClassName('additional_income-value')[0];
@@ -30,13 +29,13 @@ let periodSelect = document.querySelector('.period-select');
 let appData = {
     income: {},
     addIncome: [],
+    incomeMonth: 0,
     expenses: {},
     addExpenses: [],
     deposit: false,
     percentDeposit: 0,
     moneyDeposit: 0,
     mission: 1000000,
-    period: 3,
     budjet: 0,
     budgetDay: 0,
     budgetMonth: 0,
@@ -46,11 +45,15 @@ let appData = {
             alert('Ошибка! Поле "Месячный доход не долдно быть пустым!"');
             return;
         }
-        appData.budjet = salaryAmount.value;
+        appData.budjet = +salaryAmount.value;
         appData.getExpenses();
-        // appData.asking();
-        // appData.getExpensesMonth();
-        // appData.getBudget();
+        appData.getIncome();
+        appData.getExpensesMonth();
+        appData.getAddExpenses();
+        appData.getAddIncome();
+        appData.getBudget();
+
+        appData.showResult();
     },
     addExpensesBlock: function(){
         let expensesItemsClone = expensesItems.cloneNode(true);
@@ -61,50 +64,63 @@ let appData = {
         }
 
     },
+    getAddExpenses: function(){
+      let addExpenses = additionalExpensesItem.value.split(',');
+      addExpenses.forEach(function (item) {
+          item = item.trim();
+        if(item !== ''){
+            appData.addExpenses.push(item);
+        }
+      });
+    },
     getExpenses: function(){
        expensesItemsAll.forEach(function (item) {
            let itemExpenses = item.querySelector('.expenses-title').value;
            let cashExpenses = item.querySelector('.expenses-amount').value;
            if(itemExpenses !== '' && cashExpenses !== ''){
-               appData.expenses[itemExpenses] = cashExpenses;
+               appData.addExpenses[itemExpenses] = cashExpenses;
            }
        });
     },
-    asking: function () {
+    getIncome: function(){
         if(confirm('Есть ли у Вас дополнительный доход?')){
             let incomeItem = getStringFromUser('Введите источник дохода:', 'Таксую');
-            //let incomeCash = getNumberFromUser('Сколько в месяц это приносит дохода?', 10000);
-            this.income[incomeItem] = getNumberFromUser('Сколько в месяц это приносит дохода?', 10000);
+            appData.income[incomeItem] = +getNumberFromUser('Сколько в месяц это приносит дохода?', 10000);
         }
-        let addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую');
-        addExpenses = addExpenses.toLowerCase().split(',');
-        this.addExpenses = addExpenses.map((item) => {
-            return item.trim();
-        });
-        this.deposit = confirm('Есть ли у вас депозит в банке?');
-
-        for(let i = 0; i < expensesCount; i++) {
-            let temp = getStringFromUser('Введите обязательную статью расходов');
-            this.expenses[temp] = getNumberFromUser('Во сколько это обойдется?');
+        for(let key in appData.income){
+            appData.incomeMonth += +appData.income[key];
         }
-
+    },
+    showResult: function(){
+        budgetMonthValue.value = appData.budgetMonth;
+        budgetDayValue.value = appData.budgetDay;
+        expensesMonthValue.value = appData.expensesMonth;
+        additionalExpensesValue.value = appData.addExpenses.join(',');
+        additionalIncomeValue.value = appData.addIncome.join(', ');
+        targetMonthValue.value = appData.getTargetMonth();
+        incomePeriodValue.value = appData.calcPeriod();
+    },
+    getAddIncome: function(){
+      additionalIncomeItem.forEach(function (item) {
+        let itemVal = item.value.trim();
+        if(itemVal !== ''){
+            appData.addIncome.push(itemVal);
+        }
+      });
     },
     getBudget: function () {
-        this.budgetMonth =  this.budjet - this.expensesMonth;
-        this.budgetDay = Math.floor(this.budgetMonth/30);
+        appData.budgetMonth =  +appData.budjet + appData.incomeMonth - +appData.expensesMonth;
+        appData.budgetDay = Math.floor(appData.budgetMonth/30);
     },
     getTargetMonth: function () {
-        if(this.budgetMonth > 0){
-            return Math.ceil(this.mission/this.budgetMonth);
-        }
-        return -1;
+        return Math.ceil(targetAmount.value/this.budgetMonth);
     },
     getExpensesMonth: function () {
         let amountAll = 0;
-        for(let key in this.expenses){
-            amountAll += +this.expenses[key];
+        for(let key in appData.addExpenses){
+            amountAll += +appData.addExpenses[key];
         }
-        this.expensesMonth = amountAll;
+        appData.expensesMonth = amountAll;
     },
     getStatusIncome: function () {
         if(this.budgetDay >= 1200){
@@ -123,8 +139,8 @@ let appData = {
             this.moneyDeposit = getNumberFromUser("Какой размер депозита?", 100000);
         }
     },
-    calcSavedMoney: function () {
-        return this.budgetMonth * this.period;
+    calcPeriod: function () {
+        return this.budgetMonth * periodSelect.value;
     }
 };
 
@@ -165,7 +181,7 @@ expensesPlusBtn.addEventListener('click', appData.addExpensesBlock);
 //     console.log(`${key} : ` + appData[key]);
 // }
 
-
+console.log(appData);
 
 // ---------------------------------------------- functions  --------------------------------------
 /**
