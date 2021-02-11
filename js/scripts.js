@@ -1,13 +1,31 @@
 
-let money = 0;
-
 let expensesCount = 2; //количество статей расходов, которые мы учитываем
+//--Кнопку "Рассчитать" через id
+let start = document.getElementById('start');
+let incomePlusBtn = document.querySelector('.income').querySelector('button');
+let expensesPlusBtn = document.querySelector('.expenses').querySelector('button');
+let depositCheck = document.querySelector('#deposit-check');
+let additionalIncomeItem = document.querySelectorAll('.additional_income-item');
+let additionalIncomeItem1 = additionalIncomeItem[0];
+let additionalIncomeItem2 = additionalIncomeItem[1];
+let budgetDayValue = document.getElementsByClassName('budget_day-value')[0];
+let expensesMonthValue = document.getElementsByClassName('expenses_month-value')[0];
+let additionalIncomeValue = document.getElementsByClassName('additional_income-value')[0];
+let additionalExpensesValue = document.getElementsByClassName('additional_expenses-value')[0];
+let incomePeriodValue = document.getElementsByClassName('income_period-value')[0];
+let targetMonthValue = document.getElementsByClassName('target_month-value')[0];
+let salaryAmount = document.querySelector('.salary-amount');
+let incomeItems = document.querySelector('.income-items');
+let incomeTitle = incomeItems.querySelector('.income-title');
+let incomeAmount = incomeItems.querySelector('.income-amount');
+let expensesItemsAll = document.querySelectorAll('.expenses-items');
+let expensesItems = document.querySelector('.expenses-items');
+let expensesTitle = expensesItems.querySelector('.expenses-title');
+let expensesAmount = expensesItems.querySelector('.expenses-amount');
+let additionalExpensesItem = document.querySelector('.additional_expenses-item');
+let targetAmount = document.querySelector('.target-amount');
+let periodSelect = document.querySelector('.period-select');
 
-// спрашиваем у пользователя месячный доход
-function start(){
-    money = getNumberFromUser('Введите свой месячный доход', 100000);
-}
-start();
 
 let appData = {
     income: {},
@@ -19,10 +37,39 @@ let appData = {
     moneyDeposit: 0,
     mission: 1000000,
     period: 3,
-    budjet: money,
+    budjet: 0,
     budgetDay: 0,
     budgetMonth: 0,
     expensesMonth: 0,
+    start: function(){
+        if(salaryAmount.value === ''){
+            alert('Ошибка! Поле "Месячный доход не долдно быть пустым!"');
+            return;
+        }
+        appData.budjet = salaryAmount.value;
+        appData.getExpenses();
+        // appData.asking();
+        // appData.getExpensesMonth();
+        // appData.getBudget();
+    },
+    addExpensesBlock: function(){
+        let expensesItemsClone = expensesItems.cloneNode(true);
+        expensesItems.parentNode.insertBefore(expensesItemsClone, expensesPlusBtn);
+        expensesItemsAll = document.querySelectorAll('.expenses-items');
+        if(expensesItemsAll.length === 3){
+            expensesPlusBtn.style.display = 'none';
+        }
+
+    },
+    getExpenses: function(){
+       expensesItemsAll.forEach(function (item) {
+           let itemExpenses = item.querySelector('.expenses-title').value;
+           let cashExpenses = item.querySelector('.expenses-amount').value;
+           if(itemExpenses !== '' && cashExpenses !== ''){
+               appData.expenses[itemExpenses] = cashExpenses;
+           }
+       });
+    },
     asking: function () {
         if(confirm('Есть ли у Вас дополнительный доход?')){
             let incomeItem = getStringFromUser('Введите источник дохода:', 'Таксую');
@@ -81,6 +128,8 @@ let appData = {
     }
 };
 
+start.addEventListener('click', appData.start);
+expensesPlusBtn.addEventListener('click', appData.addExpensesBlock);
 
 // appData.asking();
 //
@@ -162,96 +211,4 @@ function getStringFromUser(message, defaultValue) {
 //------------------------------ Lesson09 ----------------------------------------------------------
 
 
-//--Кнопку "Рассчитать" через id
-let startBtn = document.getElementById('start');
-console.log(startBtn);
 
-
-
-//--Кнопки “+” (плюс) через Tag, каждую в своей переменной.
-//------------------------------ Так? -----------------------------------------
-let incomePlusBtn = document.querySelector('.income').querySelector('button');
-console.log(incomePlusBtn);
-
-let expensesPlusBtn = document.querySelector('.expenses').querySelector('button');
-console.log(expensesPlusBtn);
-//------------------   Или так? ---------------------------------------------
-let incomePlusBtn2 = document.getElementsByTagName('button')[0];
-console.log(incomePlusBtn2);
-
-let expensesPlusBtn2 = document.getElementsByTagName('button')[1];
-console.log(expensesPlusBtn2);
-
-
-
-//--Чекбокс по id через querySelector
-let depositCheck = document.querySelector('#deposit-check');
-console.log(depositCheck);
-
-
-
-//--Поля для ввода возможных доходов (additional_income-item) при помощи querySelectorAll
-//------------------    Так и не понял в разныx переменные их надо, или в коллекцию -----------
-let additionalIncomeItem = document.querySelectorAll('.additional_income-item');
-console.log(additionalIncomeItem);
-//------------------    Если поотдельности, то :
-let additionalIncomeItem1 = additionalIncomeItem[0];
-let additionalIncomeItem2 = additionalIncomeItem[1];
-console.log(additionalIncomeItem1);
-console.log(additionalIncomeItem2);
-
-
-/*
-* Каждый элемент в правой части программы через класс(не через querySelector),
-* которые имеют в имени класса "-value", начиная с class="budget_day-value" и заканчивая class="target_month-value">
-* */
-//-----------------------    budget_month-value я так понимаю не надо пока?
-let budgetDayValue = document.getElementsByClassName('budget_day-value')[0];
-console.log(budgetDayValue);
-
-let expensesMonthValue = document.getElementsByClassName('expenses_month-value')[0];
-console.log(expensesMonthValue);
-
-let additionalIncomeValue = document.getElementsByClassName('additional_income-value')[0];
-console.log(additionalIncomeValue);
-
-let additionalExpensesValue = document.getElementsByClassName('additional_expenses-value')[0];
-console.log(additionalExpensesValue);
-
-let incomePeriodValue = document.getElementsByClassName('income_period-value')[0];
-console.log(incomePeriodValue);
-
-let targetMonthValue = document.getElementsByClassName('target_month-value')[0];
-console.log(targetMonthValue);
-
-
-/**
- * Оставшиеся поля через querySelector каждый в отдельную переменную:
- * поля ввода (input) с левой стороны и не забудьте про range.
- */
-let salaryAmount = document.querySelector('.salary-amount');
-console.log(salaryAmount);
-
-let incomeItems = document.querySelector('.income-items');
-let incomeTitle = incomeItems.querySelector('.income-title');
-console.log(incomeTitle);
-let incomeAmount = incomeItems.querySelector('.income-amount');
-console.log(incomeAmount);
-
-
-let expensesItems = document.querySelector('.expenses-items');
-let expensesTitle = expensesItems.querySelector('.expenses-title');
-console.log(expensesTitle);
-let expensesAmount = expensesItems.querySelector('.expenses-amount');
-console.log(expensesAmount);
-
-
-let additionalExpensesItem = document.querySelector('.additional_expenses-item');
-console.log(additionalExpensesItem);
-
-
-let targetAmount = document.querySelector('.target-amount');
-console.log(targetAmount);
-
-let periodSelect = document.querySelector('.period-select');
-console.log(periodSelect);
