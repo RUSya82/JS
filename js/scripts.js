@@ -53,6 +53,7 @@ let appData = {
     },
     addExpensesBlock: function(){
         let expensesItemsClone = expensesItems.cloneNode(true);
+        clearInputs(expensesItemsClone);
         expensesItems.parentNode.insertBefore(expensesItemsClone, expensesPlusBtn);
         expensesItemsAll = document.querySelectorAll('.expenses-items');
         if(expensesItemsAll.length >= 3){
@@ -65,6 +66,7 @@ let appData = {
      */
     addIncomeBlock : function(){
         let incomeItemsClone = incomeItems.cloneNode(true);
+        clearInputs(incomeItemsClone);
         incomeItems.parentNode.insertBefore(incomeItemsClone, incomePlusBtn);
         incomeItemsAll = document.querySelectorAll('.income-items');
         if(incomeItemsAll.length >= 3){
@@ -132,7 +134,7 @@ let appData = {
       });
     },
     getBudget: function () {
-        appData.budgetMonth =  +appData.budjet + +appData.incomeMonth - +appData.expensesMonth;
+        appData.budgetMonth =  +appData.budjet + appData.incomeMonth - +appData.expensesMonth;
         appData.budgetDay = Math.floor(appData.budgetMonth/30);
     },
     getTargetMonth: function () {
@@ -231,6 +233,15 @@ periodSelect.addEventListener('input', function () {
 console.log(appData);
 
 // ---------------------------------------------- functions  --------------------------------------
+/**
+ * Функция очистки инпутов в переданном элементе
+ * @param element
+ */
+function clearInputs(element){
+    element.querySelectorAll('input').forEach(item => {
+        item.value = '';
+    }) ;
+}
 /**
  * Проверяет можно ли преобразовать переменную в число
  * ВНИМАИЕ!!! Не меняет само число, а возвращает только bool
