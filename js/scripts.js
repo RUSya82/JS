@@ -7,7 +7,7 @@ let expensesCount = 2; //количество статей расходов, к�
 function start(){
     money = getNumberFromUser('Введите свой месячный доход', 100000);
 }
-// start();
+start();
 
 let appData = {
     income: {},
