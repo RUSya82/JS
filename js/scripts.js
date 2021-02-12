@@ -26,6 +26,23 @@ let periodSelect = document.querySelector('.period-select');
 let periodAmount = document.querySelector('.period-amount');
 
 
+/**
+ * Поля с placeholder="Наименование" разрешить ввод только русских букв пробелов и знаков препинания
+ * @type {NodeListOf<Element>}
+ */
+let textInputs = document.querySelectorAll('input[placeholder="Наименование"]');
+textInputs.forEach(function (item) {
+    validTextInput(item);
+});
+/**
+ *  Поля с placeholder="Сумма" разрешить ввод только цифр
+ * @type {NodeListOf<Element>}
+ */
+let numberInputs = document.querySelectorAll('input[placeholder="Сумма"]');
+numberInputs.forEach(function (item) {
+    validNumberInput(item);
+});
+
 let appData = {
     income: {},
     addIncome: [],
@@ -55,19 +72,23 @@ let appData = {
         let expensesItemsClone = expensesItems.cloneNode(true);
         clearInputs(expensesItemsClone);
         expensesItems.parentNode.insertBefore(expensesItemsClone, expensesPlusBtn);
+        //навешиваем валидаторы на новые инпуты
+        validTextInput(expensesItemsClone.querySelector('.expenses-title'));
+        validNumberInput(expensesItemsClone.querySelector('.expenses-amount'));
         expensesItemsAll = document.querySelectorAll('.expenses-items');
         if(expensesItemsAll.length >= 3){
             expensesPlusBtn.style.display = 'none';
         }
 
     },
-    /**
-     * 2 - Создать метод addIncomeBlock аналогичный addExpensesBlock
-     */
+
     addIncomeBlock : function(){
         let incomeItemsClone = incomeItems.cloneNode(true);
         clearInputs(incomeItemsClone);
         incomeItems.parentNode.insertBefore(incomeItemsClone, incomePlusBtn);
+        //навешиваем валидаторы на новые инпуты
+        validTextInput(incomeItemsClone.querySelector('.income-title'));
+        validNumberInput(incomeItemsClone.querySelector('.income-amount'));
         incomeItemsAll = document.querySelectorAll('.income-items');
         if(incomeItemsAll.length >= 3){
             incomePlusBtn.style.display = 'none';
@@ -95,9 +116,6 @@ let appData = {
         }
         console.log(appData.expensesMonth);
     },
-    /**
-     * 1 - Переписать метод getIncome аналогично getExpenses
-     */
     getIncome: function(){
         incomeItemsAll.forEach(function (item) {
             let incomeItem = item.querySelector('.income-title').value;
@@ -118,9 +136,6 @@ let appData = {
         additionalIncomeValue.value = appData.addIncome.join(', ');
         targetMonthValue.value = appData.getTargetMonth();
         incomePeriodValue.value = appData.calcPeriod();
-        /**
-         * 5 - Добавить обработчик события внутри метода showResult
-         */
         periodSelect.addEventListener('input', function () {
             incomePeriodValue.value = appData.calcPeriod();
         });
@@ -141,10 +156,6 @@ let appData = {
         return Math.ceil(targetAmount.value/this.budgetMonth);
     },
     getExpensesMonth: function () {
-        // let amountAll = 0;
-        // for(let key in appData.addExpenses){
-        //     amountAll += +appData.addExpenses[key];
-        // }
         return appData.expensesMonth;
     },
     getStatusIncome: function () {
@@ -196,43 +207,27 @@ periodSelect.addEventListener('input', function () {
     periodAmount.innerHTML = periodSelect.value;
 });
 
-// appData.asking();
-//
-// appData.getExpensesMonth();
-
-/*
-    Возможные расходы (addExpenses) вывести строкой в консоль каждое слово
-    с большой буквы слова разделены запятой и пробелом
-    Пример (Интернет, Такси, Коммунальные расходы)
-*/
-// let addExpensesToString = appData.addExpenses.map( function (item) {
-//    return item[0].toUpperCase() + item.slice(1);
-// }).join(', ');
-// console.log(addExpensesToString);
-
-//Расходы за месяц
-// console.log('Расходы за месяц: ' + appData.expensesMonth);
-
-//Объявить переменную accumulatedMonth и присвоить ей результат вызова функции getAccumulatedMonth
-// appData.getBudget();
-
-// Срок достижения цели
-// let message = (appData.getTargetMonth() > 0) ? (`Цель будет достигнута через ${appData.getTargetMonth()} месяцев`) : ('Цель не будет достигнута никогда, ищите другую работу!');
-// console.log(message);
-
-
-// console.log(`Бюджет на день: ${appData.budgetDay}`);
-//
-//
-//
-// console.log("Наша программа включает в себя данные: ");
-// for (let key in appData){
-//     console.log(`${key} : ` + appData[key]);
-// }
-
-console.log(appData);
 
 // ---------------------------------------------- functions  --------------------------------------
+/**
+ * Валидация текстового инпута, не даёт вводить пользователю англоийские символы
+ * @param selector - селектор
+ */
+function validTextInput(selector){
+    selector.addEventListener('input', () => {
+        selector.value = selector.value.replace(/[A-Za-z<>/*#^&=+|\\`~]+$/g, '');
+    });
+}
+
+/**
+ * Валидация текстового инпута, даёт вводить только цифры
+ * @param selector
+ */
+function validNumberInput(selector){
+    selector.addEventListener('input', () => {
+        selector.value = selector.value.replace(/[\D]+$/g, '');
+    });
+}
 /**
  * Функция очистки инпутов в переданном элементе
  * @param element
