@@ -44,9 +44,8 @@ let numberInputs = document.querySelectorAll('input[placeholder="Сумма"]');
 numberInputs.forEach(function (item) {
     validNumberInput(item);
 });
-
-//Объект клон
 let appDataClone = {};
+
 
 let appData = {
     income: {},
@@ -63,6 +62,10 @@ let appData = {
     budgetMonth: 0,
     expensesMonth: 0,
     start: function(){
+        //делаем фотографию объекта
+        appDataClone = {};
+        appDataClone = JSON.parse(JSON.stringify(appData));
+        console.log(appDataClone);
         startBind.call(appData);                //привязка
         function startBind() {
             this.budjet = +salaryAmount.value;
@@ -80,7 +83,7 @@ let appData = {
 
     },
     reset: function(){
-        Object.assign(appData, appDataClone);
+
         resetBind.call(appData);            //привязка
         function resetBind(){
             this.resetInputs();
@@ -94,6 +97,13 @@ let appData = {
         incomePlusBtn.style.display = 'block';
         this.style.display= 'none';
         start.style.display = 'block';
+        start.setAttribute('disabled', 'true');
+
+        let newAppData = Object.assign({}, appDataClone);
+        console.log(appDataClone);
+        appData = newAppData;
+        console.log(appData);
+
 
     },
     blockInputs: function() {
@@ -242,12 +252,18 @@ let appData = {
     }
 };
 
-//делаем фотографию объекта
-Object.assign(appDataClone, appData);
+
 
 
 //Блокируем кнопку "Рассчитать" изначально
 start.setAttribute('disabled', 'true');
+
+function objClone(one, two){
+    let clone = {}; // новый пустой объект
+    for (let key in user) {
+        clone[key] = user[key];
+    }
+}
 
 //Разблокируем при вводе дохода, но если пользователь стёр, то заблокируем обратно
 salaryAmount.addEventListener('input', function (e) {
