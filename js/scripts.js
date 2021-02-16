@@ -90,6 +90,8 @@ let appData = {
             periodSelect.value = 1;
             periodAmount.textContent = '1';
         }
+        expensesPlusBtn.style.display = 'block';
+        incomePlusBtn.style.display = 'block';
         this.style.display= 'none';
         start.style.display = 'block';
 
