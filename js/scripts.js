@@ -45,6 +45,7 @@ numberInputs.forEach(function (item) {
     validNumberInput(item);
 });
 
+//Объект клон
 let appDataClone = {};
 
 let appData = {
@@ -62,7 +63,7 @@ let appData = {
     budgetMonth: 0,
     expensesMonth: 0,
     start: function(){
-        startBind.call(appData);
+        startBind.call(appData);                //привязка
         function startBind() {
             this.budjet = +salaryAmount.value;
             this.getExpenses();
@@ -72,27 +73,34 @@ let appData = {
             this.getAddIncome();
             this.getBudget();
             this.showResult();
+            this.blockInputs();
         }
         this.style.display= 'none';
         cancel.style.display = 'block';
-        let textInputs = data.querySelectorAll('input[type=text]');
-        textInputs.forEach(item => {
-            item.setAttribute('disabled', 'true');
-        });
+
     },
     reset: function(){
         Object.assign(appData, appDataClone);
-        resetBind.call(appData);
+        resetBind.call(appData);            //привязка
         function resetBind(){
             this.resetInputs();
             this.removeIncomes();
             this.removeExpenses();
-
+            this.unblockInputs();
             periodSelect.value = 1;
             periodAmount.textContent = '1';
         }
         this.style.display= 'none';
         start.style.display = 'block';
+
+    },
+    blockInputs: function() {
+        let textInputs = data.querySelectorAll('input[type=text]');
+        textInputs.forEach(item => {
+            item.setAttribute('disabled', 'true');
+        });
+    },
+    unblockInputs: function() {
         let textInputs = data.querySelectorAll('input[type=text]');
         textInputs.forEach(item => {
             item.removeAttribute('disabled');
@@ -115,7 +123,6 @@ let appData = {
     removeExpenses: function(){
         let expensesItems = document.querySelectorAll('.expenses-items');
         expensesItems.forEach((item, index) => {
-            console.log(this);
             if(index !== 0){
                 item.remove();
             }
@@ -233,15 +240,13 @@ let appData = {
     }
 };
 
+//делаем фотографию объекта
 Object.assign(appDataClone, appData);
 
-/**
- * 6 - Запретить нажатие кнопки Рассчитать пока поле Месячный доход пустой,
- * проверку поля Месячный доход в методе Start убрать.
- */
-//Блокируем кнопку изначально
+
+//Блокируем кнопку "Рассчитать" изначально
 start.setAttribute('disabled', 'true');
-cancel.addEventListener('click', appData.reset);
+
 //Разблокируем при вводе дохода, но если пользователь стёр, то заблокируем обратно
 salaryAmount.addEventListener('input', function (e) {
     //console.log(salaryAmount.value[salaryAmount.value.length-1]);
@@ -254,12 +259,15 @@ salaryAmount.addEventListener('input', function (e) {
 });
 //клик по кнопке "Рассчитать"
 start.addEventListener('click', appData.start);
+
+//событие клика по кнопке сброса
+cancel.addEventListener('click', appData.reset);
+
 //клики по плюсикам
 expensesPlusBtn.addEventListener('click', appData.addExpensesBlock);
 incomePlusBtn.addEventListener('click', appData.addIncomeBlock);
-/**
- * 4 -Число под полоской (input type range) должно меняться в зависимости от позиции range, используем событие input.
- */
+
+//меняем число под range
 periodSelect.addEventListener('input', function () {
     periodAmount.innerHTML = periodSelect.value;
 });
