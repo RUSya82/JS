@@ -62,12 +62,9 @@ let appData = {
     budgetMonth: 0,
     expensesMonth: 0,
     start: function(){
-        //делаем фотографию объекта
-        appDataClone = {};
-        appDataClone = JSON.parse(JSON.stringify(appData));
+        console.log(appData);
         startBind.call(appData);                //привязка
         function startBind() {
-            console.log(this);
             this.budjet = +salaryAmount.value;
             this.getExpenses();
             this.getIncome();
@@ -80,9 +77,29 @@ let appData = {
         }
         this.style.display= 'none';
         cancel.style.display = 'block';
+        console.log(appData);
 
     },
+    reset: function(){
 
+        resetBind.call(appData);            //привязка
+
+        function resetBind(){
+            this.resetInputs();
+            this.removeIncomes();
+            this.removeExpenses();
+            this.unblockInputs();
+            periodSelect.value = 1;
+            periodAmount.textContent = '1';
+        }
+        expensesPlusBtn.style.display = 'block';
+        incomePlusBtn.style.display = 'block';
+        this.style.display= 'none';
+        start.style.display = 'block';
+        start.setAttribute('disabled', 'true');
+        //reset object
+        Object.assign(appData, appDataClone);
+    },
     blockInputs: function() {
         let textInputs = data.querySelectorAll('input[type=text]');
         textInputs.forEach(item => {
@@ -227,29 +244,11 @@ let appData = {
     calcPeriod: function () {
         return this.budgetMonth * periodSelect.value;
     },
-    reset: function(){
 
-        resetBind.call(appData);            //привязка
-
-        function resetBind(){
-            this.resetInputs();
-            this.removeIncomes();
-            this.removeExpenses();
-            this.unblockInputs();
-            periodSelect.value = 1;
-            periodAmount.textContent = '1';
-        }
-        expensesPlusBtn.style.display = 'block';
-        incomePlusBtn.style.display = 'block';
-        this.style.display= 'none';
-        start.style.display = 'block';
-        start.setAttribute('disabled', 'true');
-        Object.assign(appData,appDataClone);
-    },
 };
 
-
-
+//Делаем фото объекта
+appDataClone = JSON.parse(JSON.stringify(appData));
 
 //Блокируем кнопку "Рассчитать" изначально
 start.setAttribute('disabled', 'true');
