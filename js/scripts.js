@@ -65,9 +65,9 @@ let appData = {
         //делаем фотографию объекта
         appDataClone = {};
         appDataClone = JSON.parse(JSON.stringify(appData));
-        console.log(appDataClone);
         startBind.call(appData);                //привязка
         function startBind() {
+            console.log(this);
             this.budjet = +salaryAmount.value;
             this.getExpenses();
             this.getIncome();
@@ -82,30 +82,7 @@ let appData = {
         cancel.style.display = 'block';
 
     },
-    reset: function(){
 
-        resetBind.call(appData);            //привязка
-        function resetBind(){
-            this.resetInputs();
-            this.removeIncomes();
-            this.removeExpenses();
-            this.unblockInputs();
-            periodSelect.value = 1;
-            periodAmount.textContent = '1';
-        }
-        expensesPlusBtn.style.display = 'block';
-        incomePlusBtn.style.display = 'block';
-        this.style.display= 'none';
-        start.style.display = 'block';
-        start.setAttribute('disabled', 'true');
-
-        let newAppData = Object.assign({}, appDataClone);
-        console.log(appDataClone);
-        appData = newAppData;
-        console.log(appData);
-
-
-    },
     blockInputs: function() {
         let textInputs = data.querySelectorAll('input[type=text]');
         textInputs.forEach(item => {
@@ -249,7 +226,26 @@ let appData = {
     },
     calcPeriod: function () {
         return this.budgetMonth * periodSelect.value;
-    }
+    },
+    reset: function(){
+
+        resetBind.call(appData);            //привязка
+
+        function resetBind(){
+            this.resetInputs();
+            this.removeIncomes();
+            this.removeExpenses();
+            this.unblockInputs();
+            periodSelect.value = 1;
+            periodAmount.textContent = '1';
+        }
+        expensesPlusBtn.style.display = 'block';
+        incomePlusBtn.style.display = 'block';
+        this.style.display= 'none';
+        start.style.display = 'block';
+        start.setAttribute('disabled', 'true');
+        Object.assign(appData,appDataClone);
+    },
 };
 
 
