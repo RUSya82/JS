@@ -62,7 +62,6 @@ let appData = {
     budgetMonth: 0,
     expensesMonth: 0,
     start: function(){
-        console.log(appData);
         startBind.call(appData);                //привязка
         function startBind() {
             this.budjet = +salaryAmount.value;
@@ -77,7 +76,6 @@ let appData = {
         }
         this.style.display= 'none';
         cancel.style.display = 'block';
-        console.log(appData);
 
     },
     reset: function(){
@@ -92,6 +90,7 @@ let appData = {
             periodSelect.value = 1;
             periodAmount.textContent = '1';
         }
+        depositCheck.checked = false;
         expensesPlusBtn.style.display = 'block';
         incomePlusBtn.style.display = 'block';
         this.style.display= 'none';
