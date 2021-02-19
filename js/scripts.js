@@ -48,6 +48,7 @@ class AppData {
         this.getExpenses();
         this.getIncome();
         this.getExpensesMonth();
+        //this.getAdd();
         this.getAddExpenses();
         this.getAddIncome();
         this.getBudget();
@@ -55,6 +56,7 @@ class AppData {
         this.blockInputs();
         start.style.display= 'none';
         cancel.style.display = 'block';
+        console.log(this);
     }
     reset(){
         this.resetInputs();
@@ -73,6 +75,7 @@ class AppData {
         let appDataClone = new AppData();
         //Очищаем наш объект, сливая его с новым
         Object.assign(this, appDataClone);
+        console.log(this);
     }
     blockInputs(){
         const textInputs = data.querySelectorAll('input[type=text]');
@@ -166,6 +169,7 @@ class AppData {
     }
     getAddExpenses(){
         const addExpenses = additionalExpensesItem.value.split(',');
+        console.log(addExpenses);
         addExpenses.forEach( (item) => {
             item = item.trim();
             if(item !== ''){
@@ -174,12 +178,24 @@ class AppData {
         });
     }
     getAddIncome(){
+        console.log(additionalIncomeItem);
         additionalIncomeItem.forEach( (item) => {
             let itemVal = item.value.trim();
             if(itemVal !== ''){
                 this.addIncome.push(itemVal);
             }
         });
+    }
+    getAdd(){
+        const func = (item, arr) => {
+            item = item.trim();
+            if(item !== ''){
+                arr.push(item);
+            }
+        };
+        const addExpenses = additionalExpensesItem.value.split(',');
+        addExpenses.forEach(item => func(item, this.addExpenses));
+        additionalIncomeItem.forEach(item => func(item.value, this.addIncome));
     }
     getExpenses(){
         expensesItemsAll.forEach( (item) =>  {
