@@ -198,6 +198,7 @@ class AppData {
     getTargetMonth(){
         return Math.ceil(targetAmount.value/this.budgetMonth);
     }
+
     getExpensesMonth(){
         return this.expensesMonth;
     }
