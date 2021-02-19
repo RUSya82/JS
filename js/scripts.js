@@ -48,15 +48,12 @@ class AppData {
         this.getExpenses();
         this.getIncome();
         this.getExpensesMonth();
-        //this.getAdd();
-        this.getAddExpenses();
-        this.getAddIncome();
+        this.getAdd();
         this.getBudget();
         this.showResult();
         this.blockInputs();
         start.style.display= 'none';
         cancel.style.display = 'block';
-        console.log(this);
     }
     reset(){
         this.resetInputs();
@@ -75,7 +72,6 @@ class AppData {
         let appDataClone = new AppData();
         //Очищаем наш объект, сливая его с новым
         Object.assign(this, appDataClone);
-        console.log(this);
     }
     blockInputs(){
         const textInputs = data.querySelectorAll('input[type=text]');
@@ -167,25 +163,6 @@ class AppData {
             validNumberInput(item);
         });
     }
-    getAddExpenses(){
-        const addExpenses = additionalExpensesItem.value.split(',');
-        console.log(addExpenses);
-        addExpenses.forEach( (item) => {
-            item = item.trim();
-            if(item !== ''){
-                this.addExpenses.push(item);
-            }
-        });
-    }
-    getAddIncome(){
-        console.log(additionalIncomeItem);
-        additionalIncomeItem.forEach( (item) => {
-            let itemVal = item.value.trim();
-            if(itemVal !== ''){
-                this.addIncome.push(itemVal);
-            }
-        });
-    }
     getAdd(){
         const func = (item, arr) => {
             item = item.trim();
@@ -198,6 +175,7 @@ class AppData {
         additionalIncomeItem.forEach(item => func(item.value, this.addIncome));
     }
     getExpenses(){
+        const expensesItemsAll = document.querySelectorAll('.expenses-items');
         expensesItemsAll.forEach( (item) =>  {
             let itemExpenses = item.querySelector('.expenses-title').value;
             let cashExpenses = item.querySelector('.expenses-amount').value;
@@ -210,6 +188,7 @@ class AppData {
         }
     }
     getIncome(){
+        const incomeItemsAll = document.querySelectorAll('.income-items');
         incomeItemsAll.forEach( (item) =>{
             let incomeItem = item.querySelector('.income-title').value;
             let incomeCash = item.querySelector('.income-amount').value;
