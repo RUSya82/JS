@@ -171,6 +171,7 @@ class AppData {
             }
         };
         const addExpenses = additionalExpensesItem.value.split(',');
+        console.log();
         addExpenses.forEach(item => func(item, this.addExpenses));
         additionalIncomeItem.forEach(item => func(item.value, this.addIncome));
     }
