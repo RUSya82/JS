@@ -108,35 +108,61 @@ class AppData {
             }
         });
     }
-    addExpensesBlock(){
-        const expensesItemsClone = expensesItems.cloneNode(true);
-        //чистим новые инпуты
-        expensesItemsClone.querySelectorAll('input').forEach(item => {
+
+    /**
+     * Добавление блока по нажатию кнопки +
+     *
+     */
+    addBlock(){
+        const btn = this;       // this - это кнопка, по которой кликнули
+        const elem = btn.parentNode.classList[0];       //получаем str expenses или income
+        const clonedElement = document.querySelector(`.${elem}-items`);
+        const elemClone = clonedElement.cloneNode(true);
+        elemClone.querySelectorAll('input').forEach(item => {
             item.value = '';
         }) ;
-        expensesItems.parentNode.insertBefore(expensesItemsClone, expensesPlusBtn);
-        //навешиваем валидаторы на новые инпуты
-        validTextInput(expensesItemsClone.querySelector('.expenses-title'));
-        validNumberInput(expensesItemsClone.querySelector('.expenses-amount'));
-        const expensesItemsAll = document.querySelectorAll('.expenses-items');
-        if(expensesItemsAll.length >= 3){
-            expensesPlusBtn.style.display = 'none';
+        clonedElement.parentNode.insertBefore(elemClone, btn);
+        validTextInput(elemClone.querySelector(`.${elem}-title`));
+        validNumberInput(elemClone.querySelector(`.${elem}-amount`));
+        const elemItemsAll = document.querySelectorAll(`.${elem}-items`);
+        if(elemItemsAll.length >= 3){
+            btn.style.display = 'none';
         }
     }
-    addIncomeBlock(){
-        const incomeItemsClone = incomeItems.cloneNode(true);
-        //чистим новые инпуты
-        incomeItemsClone.querySelectorAll('input').forEach(item => {
-            item.value = '';
-        }) ;
-        incomeItems.parentNode.insertBefore(incomeItemsClone, incomePlusBtn);
-        //навешиваем валидаторы на новые инпуты
-        validTextInput(incomeItemsClone.querySelector('.income-title'));
-        validNumberInput(incomeItemsClone.querySelector('.income-amount'));
-        const incomeItemsAll = document.querySelectorAll('.income-items');
-        if(incomeItemsAll.length >= 3){
-            incomePlusBtn.style.display = 'none';
-        }
+    addListeners(){
+        //Разблокируем кнопку "Расчитать" при вводе дохода, но если пользователь стёр, то заблокируем обратно
+        salaryAmount.addEventListener('input', function (e) {
+            if(salaryAmount.value !== ''){
+                start.removeAttribute('disabled');
+            } else {
+                start.setAttribute('disabled', 'true');
+            }
+
+        });
+        //клик по кнопке "Рассчитать"
+        start.addEventListener('click', () => this.start());
+
+        //событие клика по кнопке сброса
+        cancel.addEventListener('click', () => this.reset());
+
+        //клики по плюсикам
+        // expensesPlusBtn.addEventListener('click', () => appData.addBlock('expenses'));
+        // incomePlusBtn.addEventListener('click', () => appData.addBlock('income'));
+        expensesPlusBtn.addEventListener('click', this.addBlock);
+        incomePlusBtn.addEventListener('click',  this.addBlock);
+
+        //меняем число под range
+        periodSelect.addEventListener('input', function () {
+            periodAmount.innerHTML = periodSelect.value;
+        });
+        let textInputs = document.querySelectorAll('input[placeholder="Наименование"]');
+        textInputs.forEach(function (item) {
+            validTextInput(item);
+        });
+        let numberInputs = document.querySelectorAll('input[placeholder="Сумма"]');
+        numberInputs.forEach(function (item) {
+            validNumberInput(item);
+        });
     }
     getAddExpenses(){
         const addExpenses = additionalExpensesItem.value.split(',');
@@ -144,6 +170,14 @@ class AppData {
             item = item.trim();
             if(item !== ''){
                 this.addExpenses.push(item);
+            }
+        });
+    }
+    getAddIncome(){
+        additionalIncomeItem.forEach( (item) => {
+            let itemVal = item.value.trim();
+            if(itemVal !== ''){
+                this.addIncome.push(itemVal);
             }
         });
     }
@@ -183,14 +217,7 @@ class AppData {
             incomePeriodValue.value = this.calcPeriod();
         });
     }
-    getAddIncome(){
-        additionalIncomeItem.forEach( (item) => {
-            let itemVal = item.value.trim();
-            if(itemVal !== ''){
-                this.addIncome.push(itemVal);
-            }
-        });
-    }
+
     getBudget(){
         this.budgetMonth =  +this.budjet + this.incomeMonth - +this.expensesMonth;
         this.budgetDay = Math.floor(this.budgetMonth/30);
@@ -222,39 +249,7 @@ class AppData {
     calcPeriod(){
         return this.budgetMonth * periodSelect.value;
     }
-    addListeners(){
-        //Разблокируем кнопку "Расчитать" при вводе дохода, но если пользователь стёр, то заблокируем обратно
-        salaryAmount.addEventListener('input', function (e) {
-            if(salaryAmount.value !== ''){
-                start.removeAttribute('disabled');
-            } else {
-                start.setAttribute('disabled', 'true');
-            }
 
-        });
-        //клик по кнопке "Рассчитать"
-        start.addEventListener('click', () => appData.start());
-
-        //событие клика по кнопке сброса
-        cancel.addEventListener('click', () => appData.reset());
-
-        //клики по плюсикам
-        expensesPlusBtn.addEventListener('click', appData.addExpensesBlock);
-        incomePlusBtn.addEventListener('click', appData.addIncomeBlock);
-
-        //меняем число под range
-        periodSelect.addEventListener('input', function () {
-            periodAmount.innerHTML = periodSelect.value;
-        });
-        let textInputs = document.querySelectorAll('input[placeholder="Наименование"]');
-        textInputs.forEach(function (item) {
-            validTextInput(item);
-        });
-        let numberInputs = document.querySelectorAll('input[placeholder="Сумма"]');
-        numberInputs.forEach(function (item) {
-            validNumberInput(item);
-        });
-    }
     init(){
         //Блокируем кнопку "Рассчитать" изначально
         start.setAttribute('disabled', 'true');
